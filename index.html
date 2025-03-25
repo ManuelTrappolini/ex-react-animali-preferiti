@@ -12,20 +12,46 @@
     <script type="text/babel">
 
 
+        function Modal({
+            title,
+            content,
+            show = false,
+            onConfirm = () => { },
+            onClose = () => { }
+        }) {
+            return show && ReactDOM.createPortal(
+                <div className="modal-container">
+                    <div className="modal">
+                        <h2>{title}</h2>
+                        {content}
+                        <button onClick={onClose}>Annulla</button>
+                        <button onClick={onConfirm}>Conferma</button>
+                    </div>
+                </div>,
+                document.body
+            )
+        }
+
         const AnimalList = () => {
 
             const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
+
             const [animals, setAnimals] = useState([]);
 
+            const [show, setShow] = useState(false)
+
+            const [animalName, SetAnimalName] = useState('')
+
             const addAnimal = () => {
-                const randomIndex = Math.floor(Math.random() * animalsChoices.length)
-                const randomAnimal = animalsChoices[randomIndex]
-                setAnimals(prev => [...prev, randomAnimal])
+                if (!animalName) return;
+                setAnimals(prev => [...prev, animalName])
+                SetAnimalName('')
+                setShow(false)
             }
 
             return (
                 <>
-                    <button onClick={addAnimal}>Aggiungi Animale</button>
+                    <button onClick={() => setShow(true)}>Aggiungi Animale</button>
                     <details>
                         <summary>Animali</summary>
                         <ul>
@@ -35,14 +61,30 @@
                         </ul>
 
                     </details>
+                    <Modal
+                        show={show}
+                        onClose={() => setShow(false)}
+                        onConfirm={addAnimal}
+                        title='Aggiungi Animale'
+                        content={
+                            <input
+                                type='text'
+                                value={animalName}
+                                onChange={e => SetAnimalName(e.target.value)}
+
+                            />
+                        }
+                    />
                 </>
             )
 
         }
 
     </script>
+
     <script type="text/babel">
 
+        const { createPortal } = ReactDOM;
         const { createRoot } = ReactDOM;
         const { useState } = React;
         const animalList = document.querySelector('.lista-animali');
