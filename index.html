@@ -14,10 +14,18 @@
 
         const AnimalList = () => {
 
-            const animals = ['Gatto', 'Cane', 'Leone', 'Tigre', 'Tartaruga']
+            const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
+            const [animals, setAnimals] = useState([]);
+
+            const addAnimal = () => {
+                const randomIndex = Math.floor(Math.random() * animalsChoices.length)
+                const randomAnimal = animalsChoices[randomIndex]
+                setAnimals(prev => [...prev, randomAnimal])
+            }
 
             return (
                 <>
+                    <button onClick={addAnimal}>Aggiungi Animale</button>
                     <details>
                         <summary>Animali</summary>
                         <ul>
@@ -36,6 +44,7 @@
     <script type="text/babel">
 
         const { createRoot } = ReactDOM;
+        const { useState } = React;
         const animalList = document.querySelector('.lista-animali');
         const root = createRoot(animalList)
         root.render(<AnimalList />)
